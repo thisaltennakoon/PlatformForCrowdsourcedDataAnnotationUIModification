@@ -1,0 +1,196 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa\
+9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    
+    <title>Rank Result</title>
+</head>
+<style>
+	body{
+		margin: auto;
+		background-color: #6f746f;
+	}
+	  .form-inline{
+		padding-top:7px;
+	  }
+	  .btn{
+		background-color: white!important; 
+	  }
+	  .btn:active{color:#343a40;
+	  }
+	 
+	  .highcharts-point{
+		fill:#09539e;
+		background-color: aliceblue;
+		
+	  }
+	  .card {
+		background-color: white;
+		border: 2px solid #343a40;
+		margin: 0 auto; /* Added */
+        float: none; /* Added */
+		margin-bottom: 10px; /* Added */
+		width:75%;
+}  
+#myTable {
+	
+	margin: 0 auto; /* Added */
+	float: none; /* Added */
+	margin-bottom: 10px; /* Added */
+}
+h5{
+		
+	   text-align: center;
+	   color: crimson;
+}
+
+
+</style>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<a class="navbar-brand" href="/">CDAP</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+		</button>
+	
+	<div class="collapse navbar-collapse" id="navbarSupportedContent">
+		<ul class="navbar-nav mr-auto">
+			<li class="nav-item active">
+				<a class="nav-link" href="/">Home <span class="sr-only"></span></a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="/UserManagement/search/">Search</a>
+			</li>
+			
+			
+			<li class="nav-item">
+				<a class="nav-link" href="/UserManagement/profile/">Profile</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="/UserManagement/profile/edit/">Edit Profile</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="/UserManagement/profile/change_password/">Change Password</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="/UserManagement/MyTasks/">My Tasks</a>
+			</li>
+			<li class="nav_item">
+	
+			</li>
+			<!---li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+				  Settings
+			</a>
+				<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+				  <a class="dropdown-item" href="/UserManagement/profile/edit/">Edit Profile</a>
+				  <a class="dropdown-item" href="/UserManagement/profile/change_password/">Change Password</a>
+				  <div class="dropdown-divider"></div>
+				  <a class="dropdown-item" href="#">Something else here</a>
+				</div>
+			  </li-->
+			
+			
+			
+			
+			<li class="nav-item">
+				<a class="nav-link" href="/UserManagement/sign_out/">Sign Out</a>
+			</li>
+			
+			</ul>
+	</div>
+	</nav>
+	<br>
+	<div class="card" >
+		<div class="card-body">
+		  <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto" class="border"></div>
+		</div>
+	  </div>
+    
+    <script src="https://code.highcharts.com/highcharts.js"> </script>
+        <script src="https://code.highcharts.com/modules/exporting.js"> </script>
+        <script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script>
+_categories = {{categories|safe}};
+_values = {{values|safe}};
+Highcharts.chart('container', {
+	chart: {
+		type: 'column'
+	},
+	title: {
+		text: 'Test annotation Result Ranks'
+	},
+	
+	xAxis: {
+		categories:_categories,
+		crosshair: true
+	},
+	yAxis: {
+		min: 0,
+		title: {
+			text: 'Test Result Score'
+		}
+	},
+	tooltip: {
+		headerFormat: '<span style="font-size:15px">{point.key}</span><table>',
+		pointFormat: '<tr><td style="color:#276b37;padding:0">{series.name}: </td>' +
+			'<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+			footerFormat: '</table>',
+		shared: true,
+		useHTML: true
+	},
+	plotOptions: {
+		column: {
+			pointPadding: 0.2,
+			borderWidth: 0
+			
+		}
+	},
+	series: [{
+		name: 'Score',
+		data: _values
+	
+		
+	}]
+});
+</script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+<div class="card" >
+	<div class="card-body">
+<table id="myTable">
+	<h5> Annotators and Previous Task Done by them</h5>
+    <thead >
+		
+        <tr >
+			
+			{% for header in categories %}
+				<th >&nbsp;&nbsp;&nbsp;&nbsp;{{ header }}</th> 
+			{% endfor %}
+			</tr>
+    </thead>
+    <tbody >
+		
+		<tr>  
+			
+			{% for value in task %}
+				<td >{% for li in value %}
+				<ul>
+					<li> {{li}}</li>
+				</ul>
+				{% endfor %}
+				</td>
+			{% endfor %}
+		</tr>
+    </tbody>
+</table>
+</div>
+</div>
+
+<br>
+{{le}}
+</body>
+</html>

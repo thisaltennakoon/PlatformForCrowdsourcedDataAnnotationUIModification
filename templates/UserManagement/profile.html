@@ -1,0 +1,175 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Profile | {{ user }} {{ super }}{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto'>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="{% static 'css/layout.css' %}">
+<script>
+  /* When the user clicks on the button,
+toggle between hiding and showing the dropdown content */
+function myFunction() {
+  document.getElementById("myDropdown").classList.toggle("show");
+}
+
+// Close the dropdown menu if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+
+</script>
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif}
+</style>
+{% endblock %}
+
+
+{% block body %}
+{% if not profile.first_name %}
+            <p>You have an empty profile.</p>
+            <a href="{% url 'UserManagement:edit_profile' %}">Add some info</a>
+{% else %}
+<!-- Page Container -->
+<div class="w3-content w3-margin-top" style="max-width:1400px;">
+<h1>{{profile.first_name}} {{profile.last_name}}</h1>
+  <!-- The Grid -->
+  <div class="w3-row-padding">
+  
+    <!-- Left Column -->
+    <div class="w3-third">
+    
+      <div class="w3-white w3-text-grey w3-card-4">
+        <div class="w3-display-container" style="align-content: center;"><br>
+          <img src="{{profile.avatar.url}}" style="width:400px; height:400px; size: relative; border-radius:50%; max-width:100%; padding-left:5%; padding-right:2%;" alt="">
+        </div><br>
+        <div class="w3-container">
+            {% if profile.is_author %}
+          <p style="color: black;"><i class="fa fa-briefcase fa-fw w3-margin-right w3-large" style="color: grey;"></i>Task Author</p>
+          {% endif %}
+            {% if profile.is_contributor %}
+            <p style="color: black;"><i class="fa fa-briefcase fa-fw w3-margin-right w3-large" style="color: grey;"></i>Task Contributor</p>
+          {% endif %}
+          <p style="color: black;"><i class="fa fa-pen fa-fw w3-margin-right w3-large " style="color: grey;"></i>{{profile.field}}</p>
+            <p style="color: black;"><i class="fa fa-home fa-fw w3-margin-right w3-large" style="color: grey;"></i>{{profile.country}}</p>
+          <p style="color: black;"><i class="fa fa-envelope fa-fw w3-margin-right w3-large" style="color: grey;"></i>{{profile.email}}</p>
+          <hr>
+
+       
+        </div>
+      </div><br>
+
+    <!-- End Left Column -->
+    </div>
+
+    <!-- Right Column -->
+    <div class="w3-twothird">
+    
+      <div class="w3-container w3-card w3-white w3-margin-bottom">
+
+        <div class="w3-container"><br>
+        <div class="dropdown">
+          <button onclick="myFunction()" class=" btn btn-primary btn-lg btn-block dropbtn">Tasks</button>
+          <div id="myDropdown" class="dropdown-content">
+            {% if profile.is_contributor %}
+            <a href="{% url 'UserManagement:field_task_list' %}">Available tasks</a>
+            {% endif %}
+            {% if profile.is_author %}
+            <a href="{% url 'UserManagement:author_task_list' %}">Authored tasks</a>
+            {% endif %}
+            {% if profile.is_contributor %}
+            <a href="/UserManagement/MyTasks/">Registered tasks</a>
+            {% endif %}
+            {% if profile.is_author %}
+            <a href="{% url 'createtask:Anno_task_add' %}">Add image annotation Task</a>
+            <a href="{% url 'createtask:TextAnno_task_add' %}">Add text annotation Task</a>
+            {% endif %}
+          </div>
+        </div>
+      </div><br>
+
+      <!--
+        {% if profile.is_contributor %}
+        <div class="w3-container"><br>
+          <button type="button" class="btn btn-outline-success" ><a href="{% url 'UserManagement:field_task_list' %}" >AvailabeTask</a></button>
+        </div><br>
+        {% endif %}
+        {% if profile.is_author %}
+        <div class="w3-container"><br>
+          <button type="button" class="btn btn-outline-success" ><a href="{% url 'UserManagement:author_task_list' %}" >Added Tasks</a></button>
+        </div><br>
+        {% endif %}
+        <button type="button" class="btn btn-outline-success" ><a href="{% url 'createtask:Anno_task_add' %}" >Add image annotation Task</a></button> 
+        <button type="button" class="btn btn-outline-success" ><a href="{% url 'createtask:TextAnno_task_add'%}" >Add text annotation Task</a></button> <br><br>
+        <div class="w3-container">
+          <button type="button" class="btn btn-outline-success" ><a href="{% url 'UserManagement:author_task_list' %}">Edit Profile</a></button>
+        </div><br>
+        <div class="w3-container">
+          <button type="button" class="btn btn-outline-success" ><a href="{% url 'UserManagement:change_password' %}">Chage Password</a></button>
+        </div><br-->
+      </div>
+
+      {% if profile.is_contributor %}
+      <div class="w3-container w3-card w3-white">
+        <h2 class="w3-text-grey w3-padding-16"><i class="fa fa-certificate fa-fw w3-margin-right w3-xxlarge w3-text-teal"></i>Completed Tasks</h2>
+        {% if user_text_data_annotation_tasks %}
+        {% for text_data_annotation_task in user_text_data_annotation_tasks %}
+        {% if text_data_annotation_task.status == "completed" %}
+        <div class="w3-container">
+          <h5 class="w3-opacity"><b>{{text_data_annotation_task.title}}</b></h5>
+          <p>{{text_data_annotation_task.description}}</p>
+          <hr>
+        </div>
+        {% endif %} 
+        {% if image_data_annotation_task.status == "completed" %}
+        <div class="w3-container">
+          <h5 class="w3-opacity"><b>{{image_data_annotation_task.title}}</b></h5>
+          <p>{{image_data_annotation_task.description}}</p>
+          <hr>
+        </div>
+        {% endif %} 
+        {% endfor %}
+        {% else %}
+        <p>You haven't completed any task yet</p>
+        {% endif %}
+      {% endif %}
+      </div>
+      
+      {% if profile.is_author %}
+      <div class="w3-container w3-card w3-white">
+        <h2 class="w3-text-grey w3-padding-16"><i class="fa fa-certificate fa-fw w3-margin-right w3-xxlarge w3-text-teal"></i>Authored Tasks</h2>
+        {% if all_author_task %}
+        {% for task in all_author_task %}
+        <div class="w3-container">
+          <h5 class="w3-opacity"><b>{{task.title}}</b></h5>
+          <p>{{task.description}}</p>
+          <hr>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>You haven't authored any tasks yet !</p>
+        {% endif %}
+      {% endif %}
+      </div>
+
+    <!-- End Right Column -->
+    </div>
+    
+  <!-- End Grid -->
+  </div>
+  
+  <!-- End Page Container -->
+    {% endif %}
+</div>
+{% endblock %}

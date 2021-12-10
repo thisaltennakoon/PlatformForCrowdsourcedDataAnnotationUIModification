@@ -1,0 +1,215 @@
+{% extends "createtask/base.html" %}
+{% block container %}
+{% load static %}
+
+<h3>{{heading}}</h3>
+<div class="container">
+<div class="row">
+    <div class="col">
+        <h4> You can cateogarise words or phares into classes</h4>
+        <h6>Example .csv file for cateogarize words into Nouns,Verbs and Adjectives</h6>
+        <img src="{% static 'guide/words1.png' %}" class="rounded" alt="..." style="width:60%">
+    </div>
+    <div class="col-5">
+        <br>
+        <br>
+        <h6>Cateogaries</h6>
+        <img src="{% static 'guide/noun.png' %}" class="rounded" alt="..." style="width:100%">
+    </div>
+</div>
+<br>
+<div class="row">
+    <div class="col">
+        <h4> You can compare words or phares and annoatate them</h4>
+        <h6>Example .csv file For compare words and annotate simillar or disssimillar</h6>
+        <img src="{% static 'guide/words_compair1.png' %}" class="rounded" alt="..." style="width:60%">
+    </div>
+    <div class="col-5">
+        <br>
+        <br>
+        <br>
+        <h6>Cateogaries</h6>
+        <img src="{% static 'guide/similar.png' %}" class="rounded" alt="..." style="width:100%">
+    </div>
+</div>
+</div>
+
+
+{% comment %} <img src="{% static 'guide/words.png' %}" class="rounded float-right" alt="..." style="width:20%"> {% endcomment %}
+{% comment %} <div class="w3-display-container w3-center">
+    <img src="{% static 'guide/words.png' %}" style="width:20% ">
+</div> {% endcomment %}
+
+<form class="form-horizontal col-12" method="POST" action="" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="row spacer">
+    {% comment %} <div class="col-3"></div> {% endcomment %}
+    <div class="col-2">
+        <label>{{taskform.title.label}}</label>
+    </div>
+    <div class="col-4">
+        <div class="input-group">
+            {{taskform.title}}
+        </div>
+    </div>
+    </div>
+    <div class="row spacer">
+        {% comment %} <div class="col-3"></div> {% endcomment %}
+    <div class="col-2">
+        <label>{{taskform.description.label}}</label>
+    </div>
+    <div class="col-4">
+        <div class="input-group">
+        {{taskform.description}}
+        </div>
+    </div>
+    </div>
+
+    <div class="row spacer">
+        {% comment %} <div class="col-3"></div> {% endcomment %}
+    <div class="col-2">
+        <label>{{taskform.instructions.label}}</label>
+    </div>
+        <div class="col-4">
+            <div class="input-group">
+            {{taskform.instructions}}
+        </div>
+    </div>
+    </div>
+
+    {% comment %} not connected {% endcomment %}
+    <div class="row spacer">  
+        {% comment %} <div class="col-3"></div>          {% endcomment %}
+        <label for="exampleFormControlSelect1" class="col-2">Number of Annotations per data instance</label>
+        <div class="col-4">
+            <select class="form-control" id="exampleFormControlSelect1" name = "NumAnnotations">
+            <option>1</option>
+            <option>3</option>
+            <option>5</option>
+            </select>
+        </div>
+
+    </div>
+
+
+    <div class="row spacer">
+        {% comment %} <div class="col-3"></div>            {% endcomment %}
+        <label for="exampleFormControlSelect1" class="col-2">Related field</label>
+        <div class="col-4">
+            <select class="form-control" id="exampleFormControlSelect1" name = "feild">
+            <option>Engineering</option>
+            <option>Medicine</option>
+            <option>Psychology</option>
+            <option>Art and Culture</option>
+            </select>
+        </div>
+    </div>
+
+
+    </div>
+
+
+    {{ formset.management_form }}
+    {% for form in formset %}
+    <div class="row form-row spacer">
+        {% comment %} <div class="col-3"></div> {% endcomment %}
+        <div class="col-2">
+            <label>{{form.cateogaryName.label}}</label>
+        </div>
+        <div class="col-4">
+            <div class="input-group">
+                {{form.cateogaryName}}
+                <div class="input-group-append">
+                    <button class="btn btn-success add-form-row">+</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    {% comment %} Not working {% endcomment %}
+    <div class="row spacer">
+        {% comment %} <div class="col-3"></div> {% endcomment %}
+            <div class="col-2">
+                <label for="exampleFormControlFile1">Dataset (Add a .csv file according to the given guide lines)</label>
+            </div>
+            <div class="col-4">
+                {{csvform.data}}
+            </div>
+        
+    </div>
+        
+    <div class="row spacer">
+        <div class="col-4 offset-2">
+            <button type="submit" class="btn btn-block btn-primary">Next</button>
+        </div>
+    </div>
+
+</form>
+
+{% block custom_js %}
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script type="text/javascript">
+function updateElementIndex(el, prefix, ndx) {
+    var id_regex = new RegExp('(' + prefix + '-\\d+)');
+    var replacement = prefix + '-' + ndx;
+    if ($(el).attr("for")) $(el).attr("for", $(el).attr("for").replace(id_regex, replacement));
+    if (el.id) el.id = el.id.replace(id_regex, replacement);
+    if (el.name) el.name = el.name.replace(id_regex, replacement);
+}
+function cloneMore(selector, prefix) {
+    var newElement = $(selector).clone(true);
+    var total = $('#id_' + prefix + '-TOTAL_FORMS').val();
+    newElement.find(':input:not([type=button]):not([type=submit]):not([type=reset])').each(function() {
+        var name = $(this).attr('name')
+        if(name) {
+            name = name.replace('-' + (total-1) + '-', '-' + total + '-');
+            var id = 'id_' + name;
+            $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
+        }
+    });
+    newElement.find('label').each(function() {
+        var forValue = $(this).attr('for');
+        if (forValue) {
+          forValue = forValue.replace('-' + (total-1) + '-', '-' + total + '-');
+          $(this).attr({'for': forValue});
+        }
+    });
+    total++;
+    $('#id_' + prefix + '-TOTAL_FORMS').val(total);
+    $(selector).after(newElement);
+    var conditionRow = $('.form-row:not(:last)');
+    conditionRow.find('.btn.add-form-row')
+    .removeClass('btn-success').addClass('btn-danger')
+    .removeClass('add-form-row').addClass('remove-form-row')
+    .html('-');
+    return false;
+}
+function deleteForm(prefix, btn) {
+    var total = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+    if (total > 1){
+        btn.closest('.form-row').remove();
+        var forms = $('.form-row');
+        $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
+        for (var i=0, formCount=forms.length; i<formCount; i++) {
+            $(forms.get(i)).find(':input').each(function() {
+                updateElementIndex(this, prefix, i);
+            });
+        }
+    }
+    return false;
+}
+$(document).on('click', '.add-form-row', function(e){
+    e.preventDefault();
+    cloneMore('.form-row:last', 'form');
+    return false;
+});
+$(document).on('click', '.remove-form-row', function(e){
+    e.preventDefault();
+    deleteForm('form', $(this));
+    return false;
+});
+
+</script>
+{% endblock %}
+{% endblock container %}

@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}Annotation task{% endblock %}
+{% block style %}
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<link rel="shortcut icon" type="image/png" href="favicon.png">
+<style>
+html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+</style>
+{% endblock %}
+{% block body %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/UserManagement/MyTasks/">My Tasks</a></li>
+    <li class="breadcrumb-item"><a href="/DoTextDataAnnotationTask/Task?task_id={{task_object.id}}">{{task_object.title}}</a></li>
+      <li class="breadcrumb-item"><a href="/DoTextDataAnnotationTask/ViewMyAnnotations?task_id={{task_object.id}}">My Contributions</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Change {{ data_instance }}</li>
+  </ol>
+</nav>
+<div class="container">
+    <div class="card">
+        <div class="card-header"><h2>Task Title : {{task_object.title}}</h2></div>
+        <div class="card-header"><h5>Task Description : {{task_object.description}}</h5></div>
+        <div class="card-header"><h5>Instructions : {{task_object.instructions}}</h5></div>
+        <div class="card-header"><h5>Task Type : {{task_object.taskType}}</h5></div>
+        <div class="card-body">
+            <ul class="list-group">
+                {% for sub_data_instance in sub_data_instances %}
+                <li class="list-group-item">{{ sub_data_instance.Data }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="card-body">
+            <h5>Your answer</h5>
+            <form action="Change" method="POST">
+                {% csrf_token %}
+                {% for data_class in data_classes %}
+                {% if annotated_data_instance.ClassID == data_class.cateogaryTag %}
+                <div class="custom-control custom-radio">
+                    <input type="radio" id="{{data_class.cateogaryTag}}" name="data_class_id" class="custom-control-input" value="{{data_class.cateogaryTag}}" checked>
+                    <label class="custom-control-label" for="{{data_class.cateogaryTag}}">{{data_class.cateogaryName}}</label>
+                </div>
+                {% else %}
+                <div class="custom-control custom-radio">
+                    <input type="radio" id="{{data_class.cateogaryTag}}" name="data_class_id" class="custom-control-input" value="{{data_class.cateogaryTag}}" unchecked>
+                    <label class="custom-control-label" for="{{data_class.cateogaryTag}}">{{data_class.cateogaryName}}</label>
+                </div>
+                {% endif %}
+                {% endfor %}
+                <input type="hidden" name="annotated_data_instance_id" value="{{annotated_data_instance.id}}">
+                <input class="btn btn-success" type="Submit" value="Save">
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
